@@ -102,7 +102,7 @@ export class MonksCompendium {
     static _onMatchSearchEntry(types, element) {
         var pack = element.dataset.pack;
         var compendium = game.packs.get(pack);
-        if (!types.includes(compendium.documentName))
+        if (compendium && !types.includes(compendium.documentName))
             element.style.display = "none";
     }
 }

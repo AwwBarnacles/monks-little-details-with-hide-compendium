@@ -3,6 +3,7 @@ import { MMCQ } from "./quantize.js";
 import { UpdateImages } from "./apps/update-images.js";
 import { HUDChanges } from "./js/hud-changes.js";
 import { MonksCompendium } from "./apps/compendium.js";
+import { HideCompendiums } from "./apps/hide-compendiums.js";
 import { WithMLDMacroConfig } from "./apps/macro-config.js"
 
 export let debugEnabled = 0;
@@ -86,6 +87,8 @@ export class MonksLittleDetails {
 
         registerSettings();
         MonksLittleDetails.registerHotKeys();
+
+        HideCompendiums.init();
 
         if (setting("compendium-additional"))
             MonksCompendium.init();

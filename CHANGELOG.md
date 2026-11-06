@@ -1,3 +1,7 @@
+# Unreleased
+
+Integrated Hide Compendiums: right-click a compendium to hide it; restore via module settings. Hidden state is enforced by a stylesheet so compendium filters/sorting no longer break it.
+
 # Version 14.01
 
 v14 Compatibility
