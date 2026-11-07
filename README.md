@@ -2,9 +2,22 @@
 A bunch of quality of life improvements to make your games run smoother.
 
 ## Installation
-Simply use the install module screen within the FoundryVTT setup
+This branch is based on Monk's Little Details 12.04 and is intended for Foundry VTT v12.
+Install the files from this branch in `Data/modules/monks-little-details`, replacing the
+existing Monk's Little Details installation. Disable the standalone Hide Compendiums
+module in the world: this version includes its functionality and imports its saved
+hidden-compendium list the first time a GM connects. Back up your world before changing modules.
+
+This branch does not provide an automatic update manifest. Do not update it using the
+upstream Monk's Little Details manifest, which would replace the integration.
 
 ## Usage & Current Features
+
+### Hide Compendiums
+As a GM, right-click a compendium in the Compendium Packs directory and select **Hide
+Compendium**. The choice applies to everyone in the world, and does not delete the pack.
+Use **Configure Settings → Monk's Little Details → Reset All Hidden Compendiums** to
+restore all hidden packs. Hiding also works when additional compendium sorting is disabled.
 
 ### Core Css Changes
 The images displayed for the filepicker and compendiums crops the image if it's not square, due to the object-fit being set to cover.  I think it looks a bit better as contain instead. 

@@ -1,3 +1,8 @@
+# Unreleased - Foundry v12 hide-compendiums integration
+
+Added a GM context action to hide compendiums and a settings menu to restore them.
+The existing standalone module's saved world list is imported once.
+
 # version 12.04
 
 Fixed deprecation warning when sorting conditions

@@ -69,8 +69,6 @@
     "css/monks-little-details.css"
   ],
   "url": "https://github.com/ironmonk88/monks-little-details",
-  "download": "https://github.com/ironmonk88/monks-little-details/archive/12.04.zip",
-  "manifest": "https://github.com/ironmonk88/monks-little-details/releases/latest/download/module.json",
   "bugs": "https://github.com/ironmonk88/monks-little-details/issues",
   "id": "monks-little-details",
   "compatibility": {

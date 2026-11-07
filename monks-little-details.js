@@ -4,6 +4,7 @@ import { UpdateImages } from "./apps/update-images.js";
 import { ModuleWarning } from "./apps/module-warning.js";
 import { HUDChanges } from "./js/hud-changes.js";
 import { MonksCompendium} from "./apps/compendium.js";
+import { initHideCompendiums } from "./apps/hide-compendiums.js";
 
 export let debugEnabled = 0;
 
@@ -85,6 +86,7 @@ export class MonksLittleDetails {
         }
 
         registerSettings();
+        initHideCompendiums();
         MonksLittleDetails.registerHotKeys();
 
         if (setting("compendium-additional"))
