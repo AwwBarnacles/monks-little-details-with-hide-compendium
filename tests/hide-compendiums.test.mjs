@@ -2,10 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-test("v12 compendium hiding preserves and restores the world list", async () => {
+for (const legacyValue of ['["world.old"]', ["world.old", "module.other"], []]) {
+test(`v12 compendium hiding preserves and restores the world list (${JSON.stringify(legacyValue)})`, async () => {
+    const expectedLegacy = typeof legacyValue === "string" ? JSON.parse(legacyValue) : legacyValue;
     const listeners = new Map();
     const registered = new Map();
-    const stored = new Map([["hide-compendiums.hidden", JSON.stringify(["world.old"])]]);
+    const stored = new Map([["hide-compendiums.hidden", legacyValue]]);
     const styles = new Map();
     const messages = [];
     let confirm = true;
@@ -42,7 +44,11 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
             format: (key, values) => `${key} ${JSON.stringify(values)}`
         },
         settings: {
-            storage: new Map([["world", { getItem: key => stored.get(key) ?? null }]]),
+            storage: new Map([["world", { getItem: key => {
+                const value = stored.get(key);
+                if (value === undefined) return null;
+                return key === "monks-little-details.hidden-compendiums" ? JSON.parse(value) : value;
+            } }]]),
             register: (namespace, key, data) => registered.set(`${namespace}.${key}`, data),
             registerMenu: (namespace, key, data) => { menu = data; },
             get: (namespace, key) => {
@@ -62,9 +68,11 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
     initHideCompendiums();
     const settingKey = "monks-little-details.hidden-compendiums";
     await listeners.get("ready")();
-    assert.deepEqual(JSON.parse(stored.get(settingKey)), ["world.old"]);
-    assert.match(styles.get("mld-hidden-compendiums").textContent, /#compendium-popout/);
-    assert.match(styles.get("mld-hidden-compendiums").textContent, /data-entry-id="world\\\.old"/);
+    assert.deepEqual(JSON.parse(stored.get(settingKey)), expectedLegacy);
+    if (expectedLegacy.length) {
+        assert.match(styles.get("mld-hidden-compendiums").textContent, /#compendium-popout/);
+        assert.match(styles.get("mld-hidden-compendiums").textContent, /data-entry-id="world\\\.old"/);
+    }
 
     const options = [];
     listeners.get("getCompendiumDirectoryEntryContext")(null, options);
@@ -76,11 +84,11 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
     game.user.isGM = true;
     confirm = false;
     await action.callback(item);
-    assert.deepEqual(JSON.parse(stored.get(settingKey)), ["world.old"]);
+    assert.deepEqual(JSON.parse(stored.get(settingKey)), expectedLegacy);
     confirm = true;
     await action.callback(item);
     assert.match(lastDialog.content, /&lt;Items&gt;/);
-    assert.deepEqual(JSON.parse(stored.get(settingKey)), ["world.old", "example.items"]);
+    assert.deepEqual(JSON.parse(stored.get(settingKey)), [...expectedLegacy, "example.items"]);
     assert.match(styles.get("mld-hidden-compendiums").textContent, /example\\\.items/);
     assert.match(styles.get("mld-hidden-compendiums").textContent, /data-pack="example\\\.items"/);
     let directoryClass;
@@ -90,7 +98,7 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
 
     confirm = false;
     await new menu.type().reset();
-    assert.equal(JSON.parse(stored.get(settingKey)).length, 2);
+    assert.equal(JSON.parse(stored.get(settingKey)).length, expectedLegacy.length + 1);
     confirm = true;
     await new menu.type().reset();
     assert.deepEqual(JSON.parse(stored.get(settingKey)), []);
@@ -99,3 +107,4 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
     assert.deepEqual(JSON.parse(stored.get(settingKey)), []);
     assert.ok(messages.length > 0);
 });
+}

@@ -3,6 +3,7 @@
 Added a GM context action to hide compendiums and a settings menu to restore them.
 The existing standalone module's saved world list is imported once.
 Fixed hidden packs not disappearing when the directory uses data-pack attributes or a custom root.
+Fixed migration of standalone hidden lists already parsed by Foundry.
 
 # version 12.04
 

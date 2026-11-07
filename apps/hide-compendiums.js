@@ -11,7 +11,7 @@ const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
 function getLegacyHidden() {
     const stored = game.settings.storage.get("world").getItem(LEGACY_KEY);
     if (stored === null) return null;
-    const hidden = JSON.parse(stored);
+    const hidden = typeof stored === "string" ? JSON.parse(stored) : stored;
     if (!Array.isArray(hidden) || hidden.some(id => typeof id !== "string"))
         throw new Error("Invalid standalone Hide Compendiums world setting");
     return hidden;
