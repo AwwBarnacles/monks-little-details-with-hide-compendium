@@ -21,7 +21,7 @@ function getHidden() {
     const stored = game.settings.storage.get("world").getItem(`${MODULE_ID}.${SETTING}`);
     return stored === null ? (getLegacyHidden() ?? []) : game.settings.get(MODULE_ID, SETTING);
 }
-const getPackId = li => li.data("entryId") ?? li.data("pack");
+const getPackId = li => li.data("pack") ?? li.data("entryId");
 
 function applyHidden() {
     let style = document.getElementById(STYLE_ID);
@@ -33,7 +33,8 @@ function applyHidden() {
 
     style.textContent = getHidden().map(id => {
         const escaped = CSS.escape(id);
-        return `:is(#compendium, #compendium-popout) .directory-item[data-entry-id="${escaped}"] { display: none !important; }`;
+        const directory = ":is(#compendium, #compendium-popout, .mld-compendium-directory)";
+        return `${directory} .directory-item:is([data-pack="${escaped}"], [data-entry-id="${escaped}"]) { display: none !important; }`;
     }).join("\n");
 }
 
@@ -89,7 +90,10 @@ export function initHideCompendiums() {
         if (game.user.isGM && game.modules.get(LEGACY_MODULE_ID)?.active)
             ui.notifications.warn(game.i18n.localize("MonksLittleDetails.hide-compendiums.disable-standalone"));
     });
-    Hooks.on("renderCompendiumDirectory", applyHidden);
+    Hooks.on("renderCompendiumDirectory", (app, html) => {
+        html.addClass("mld-compendium-directory");
+        applyHidden();
+    });
     Hooks.on("getCompendiumDirectoryEntryContext", (html, options) => {
         options.push({
             name: "MonksLittleDetails.hide-compendiums.hide",

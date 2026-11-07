@@ -69,7 +69,7 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
     const options = [];
     listeners.get("getCompendiumDirectoryEntryContext")(null, options);
     const action = options[0];
-    const item = { data: key => key === "entryId" ? "example.items" : undefined };
+    const item = { data: key => key === "pack" ? "example.items" : undefined };
     assert.equal(action.condition(item), true);
     game.user.isGM = false;
     assert.equal(action.condition(item), false);
@@ -82,7 +82,10 @@ test("v12 compendium hiding preserves and restores the world list", async () => 
     assert.match(lastDialog.content, /&lt;Items&gt;/);
     assert.deepEqual(JSON.parse(stored.get(settingKey)), ["world.old", "example.items"]);
     assert.match(styles.get("mld-hidden-compendiums").textContent, /example\\\.items/);
-    listeners.get("renderCompendiumDirectory")();
+    assert.match(styles.get("mld-hidden-compendiums").textContent, /data-pack="example\\\.items"/);
+    let directoryClass;
+    listeners.get("renderCompendiumDirectory")(null, { addClass: value => { directoryClass = value; } });
+    assert.equal(directoryClass, "mld-compendium-directory");
     assert.match(styles.get("mld-hidden-compendiums").textContent, /example\\\.items/);
 
     confirm = false;
